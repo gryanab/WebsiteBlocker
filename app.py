@@ -14,7 +14,7 @@ blocked_websites = ['www.facebook.com', 'facebook.com', 'www.instagram.com', 'in
 
 
 while True:
-    if dt(dt.now().year, dt.now().month, dt.now().day, 8) < dt.now() < dt(dt.now().year, dt.now().month, dt.now().day, 17) \
+    if dt(dt.now().year, dt.now().month, dt.now().day, 14) < dt.now() < dt(dt.now().year, dt.now().month, dt.now().day, 17) \
             or dt(dt.now().year, dt.now().month, dt.now().day, 22) < dt.now() < dt(dt.now().year, dt.now().month, dt.now().day, 8):
         with open(host_temp, 'r+') as file:
             content = file.read()
@@ -24,5 +24,12 @@ while True:
                 else:
                     file.write(redirect + ' ' + website + '\n')
     else:
-        print('Non office or sleeping hours')
+        with open(host_temp, 'r+') as file:
+            content = file.readlines()
+            file.seek(0) # replacing pointer before first character
+            for line in content:
+                if not any(website in line for website in blocked_websites):
+                    file.write(line)
+            file.truncate()
+        print('Non office nor sleeping hours')
     time.sleep(10)
